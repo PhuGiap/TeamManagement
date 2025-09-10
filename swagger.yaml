@@ -1,0 +1,234 @@
+  openapi: "3.1.0"
+  info:
+    title: Team Management API
+    version: 1.0.0
+    description: API cho quản lý User và Team
+
+  servers: [
+        {
+          url: 'https://teamcrud.onrender.com/api',
+          description: 'Production server',
+        },
+        {
+          url: 'http://localhost:5001/api',
+          description: 'Local server',
+        },
+      ]
+  paths:
+    /users:
+      get:
+        summary: Lấy danh sách tất cả users
+        tags: [Users]
+        responses:
+          "200":
+            description: Danh sách users
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/User"
+      post:
+        summary: Tạo user mới
+        tags: [Users]
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserInput"
+        responses:
+          "201":
+            description: User đã được tạo
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/User"
+
+    /users/{id}:
+      get:
+        summary: Lấy user theo id
+        tags: [Users]
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+        responses:
+          "200":
+            description: User tìm thấy
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/User"
+      put:
+        summary: Cập nhật user theo id
+        tags: [Users]
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserInput"
+        responses:
+          "200":
+            description: User đã được cập nhật
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/User"
+      delete:
+        summary: Xóa user theo id
+        tags: [Users]
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+        responses:
+          "200":
+            description: User đã được xóa
+
+    /teams:
+      get:
+        summary: Lấy danh sách tất cả teams (kèm users)
+        tags: [Teams]
+        responses:
+          '200':
+            description: Danh sách teams với users
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Team'
+      post:
+        summary: Tạo team mới
+        tags: [Teams]
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeamInput"
+        responses:
+          "201":
+            description: Team đã được tạo
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Team"
+
+    /teams/{id}:
+      get:
+        summary: Lấy team theo id (kèm users)
+        tags: [Teams]
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+        responses:
+          '200':
+            description: Team tìm thấy
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Team'
+      put:
+        summary: Cập nhật team theo id
+        tags: [Teams]
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeamInput"
+        responses:
+          "200":
+            description: Team đã được cập nhật
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Team"
+      delete:
+        summary: Xóa team theo id
+        tags: [Teams]
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+              type: integer
+        responses:
+          "200":
+            description: Team đã được xóa
+
+  components:
+    schemas:
+      User:
+        type: object
+        properties:
+          id: { type: integer }
+          name: { type: string }
+          email: { type: string }
+          role: { type: string }
+          created_at: { type: string, format: date-time }
+
+      UserInput:
+        type: object
+        required:
+          - name
+          - email
+          - role
+        properties:
+          name:
+            type: string
+          email:
+            type: string
+          role:
+            type: string
+
+      Team:
+        type: object
+        properties:
+          id: { type: integer }
+          name: { type: string }
+          description: { type: string }
+          created_at: { type: string, format: date-time }
+          users:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+
+      TeamInput:
+        type: object
+        required:
+          - name
+          - users
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+          users:
+            type: array
+            minItems: 1
+            items:
+              type: integer
+            description: "Danh sách user_id thuộc team"
