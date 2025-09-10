@@ -1,6 +1,9 @@
 # Node modules
 node_modules/
 
+# Hide package.json
+package.json
+
 # Environment variables
 .env
 
