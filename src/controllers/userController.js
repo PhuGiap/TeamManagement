@@ -18,7 +18,7 @@ const userSchema = Joi.object({
     "any.required": "Password is required",
   }),
   role: Joi.string().valid("member", "admin").required().messages({
-    "any.only": "Role must be either 'user' or 'admin'",
+    "any.only": "Role must be either 'member' or 'admin'",
     "string.empty": "Role cannot be empty",
     "any.required": "Role is required",
   }),

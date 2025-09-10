@@ -196,6 +196,7 @@
           - name
           - email
           - role
+          - password
         properties:
           name:
             type: string
@@ -203,6 +204,10 @@
             type: string
           role:
             type: string
+          password:
+            type: string
+            format: password
+            
 
       Team:
         type: object
